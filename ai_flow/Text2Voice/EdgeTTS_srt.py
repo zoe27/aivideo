@@ -1,12 +1,13 @@
 import asyncio
 import logging
+import os
+
 import edge_tts
 import pysrt
 from pydub import AudioSegment
 
 # 解析 SRT 文件
-subtitles = pysrt.open('../Voice2Text/output.srt')  # 请替换为您的 SRT 文件路径
-# print(subtitles)
+subtitles = pysrt.open('/Users/apple/Documents/AI/aivideo/Test/WhisperTTS/test_output.srt')  # 请替换为您的 SRT 文件路径
 
 
 # 异步语音合成函数
@@ -30,17 +31,11 @@ async def synthesize_speech(text, output_path, voice='zh-CN-XiaoxiaoNeural'):
                 #     print("Not an audio chunk.")
         except Exception as e:
             print(f"Error during streaming: {e}")
-                # print(chunk)
-                #
-                # print(chunk.keys())
-
-
 
 
 # 合成音频并按时间戳保存的异步处理函数
-async def process_subtitles():
+async def process_subtitles(subtitles):
     audio_segments = []
-
     # 遍历 SRT 文件中的每一行字幕
     for subtitle in subtitles:
         print(subtitle.index, subtitle.start, subtitle.end, subtitle.text)
@@ -63,8 +58,9 @@ async def process_subtitles():
 
     # 导出最终音频文件
     final_audio.export("final_output.mp3", format="mp3")
+    os.system(f"afplay final_output.mp3")
 
 
 # 主函数：启动异步任务
 if __name__ == "__main__":
-    asyncio.run(process_subtitles())  # 使用 asyncio.run 来运行异步函数
+    asyncio.run(process_subtitles(subtitles))  # 使用 asyncio.run 来运行异步函数

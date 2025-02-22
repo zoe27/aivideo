@@ -12,3 +12,4 @@ __pycache__/
 .env
 
 .idea/
+/ai_flow/Translation/m2m100-local/
