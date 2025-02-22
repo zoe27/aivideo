@@ -1,6 +1,7 @@
 import pysrt
 import whisper
 import ssl
+
 from whisper.audio import SAMPLE_RATE
 
 # 解决 SSL 问题
@@ -68,8 +69,3 @@ def transcribe_audio_to_srt(audio_file, srt_output_path, model_name="base", max_
     srt_file.save(srt_output_path)
     print(f"SRT file has been saved as {srt_output_path}")
     return srt_output_path
-
-# 示例调用
-audio_file = "../VideoFetch/file/284abbe510e4697da7a2c7b11607767e.mp3"
-srt_output_path = "c56a6a5a785f6789688c067d99e1e504.srt"
-transcribe_audio_to_srt(audio_file, srt_output_path)
