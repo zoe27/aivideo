@@ -1,6 +1,6 @@
 import os
 import unittest
-from ai_flow.Voice2Text.WhisperTTS import transcribe_audio_to_srt
+from ai_flow.Voice2Text.WhisperSTT import transcribe_audio_to_srt
 
 
 class TestWhisperTTS(unittest.TestCase):
