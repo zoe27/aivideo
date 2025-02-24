@@ -6,10 +6,6 @@ import edge_tts
 import pysrt
 from pydub import AudioSegment
 
-# 解析 SRT 文件
-subtitles = pysrt.open('/Users/apple/Documents/AI/aivideo/Test/WhisperTTS/test_output.srt')  # 请替换为您的 SRT 文件路径
-
-
 # 异步语音合成函数
 # voice需要注意，如果选的不对，可能识别不了。比如选的英语，可能就识别不了中文
 async def synthesize_speech(text, output_path, voice='zh-CN-XiaoxiaoNeural'):
@@ -38,18 +34,21 @@ async def process_subtitles(subtitles):
     audio_segments = []
     # 遍历 SRT 文件中的每一行字幕
     for subtitle in subtitles:
-        print(subtitle.index, subtitle.start, subtitle.end, subtitle.text)
-        audio_path = f"audio_{subtitle.index}.mp3"
-        print(f"Processing subtitle: {subtitle.index}, {subtitle.start} - {subtitle.end}")
+        try:
+            print(subtitle.index, subtitle.start, subtitle.end, subtitle.text)
+            audio_path = f"audio_{subtitle.index}.mp3"
+            print(f"Processing subtitle: {subtitle.index}, {subtitle.start} - {subtitle.end}")
 
-        # 合成语音并保存为文件
-        await synthesize_speech(subtitle.text, audio_path)
+            # 合成语音并保存为文件
+            await synthesize_speech(subtitle.text, audio_path)
 
-        # 使用 pydub 读取生成的音频文件
-        audio = AudioSegment.from_mp3(audio_path)
+            # 使用 pydub 读取生成的音频文件
+            audio = AudioSegment.from_mp3(audio_path)
 
-        # 保存音频片段和其开始时间
-        audio_segments.append((subtitle.start.seconds * 1000, audio))  # 转换为毫秒
+            # 保存音频片段和其开始时间
+            audio_segments.append((subtitle.start.seconds * 1000, audio))  # 转换为毫秒
+        except Exception as e:
+            logging.error(f"Error processing subtitle {subtitle.index}: {e}")
 
     # 按时间戳顺序拼接音频片段
     final_audio = AudioSegment.silent(duration=0)
@@ -60,7 +59,3 @@ async def process_subtitles(subtitles):
     final_audio.export("final_output.mp3", format="mp3")
     os.system(f"afplay final_output.mp3")
 
-
-# 主函数：启动异步任务
-if __name__ == "__main__":
-    asyncio.run(process_subtitles(subtitles))  # 使用 asyncio.run 来运行异步函数
