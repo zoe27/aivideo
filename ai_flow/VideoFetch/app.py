@@ -49,12 +49,5 @@ def validator_url(url):
 
     return True
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
-    title = download("https://www.youtube.com/watch?v=T6wXCqO5tdY", "file", "key")
+    title = download("https://www.youtube.com/watch?v=3M1QBzdpu4Y&list=PLmJkIjmo8j6SetIJSQIbwWqkrCXpA7MfV", "file", "key")

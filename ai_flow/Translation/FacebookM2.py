@@ -39,3 +39,18 @@ def translate_text(src_lang: str, tgt_lang: str, text: str) -> str:
     translated_text = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)[0]
     return translated_text
 
+def translate_srt_file(input_file: str, output_file: str, src_lang: str, tgt_lang: str):
+    with open(input_file, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+
+    translated_lines = []
+    for line in lines:
+        if line.strip() and not line.strip().isdigit() and '-->' not in line:
+            translated_text = translate_text(src_lang, tgt_lang, line.strip())
+            translated_lines.append(translated_text + '\n')
+        else:
+            translated_lines.append(line)
+
+    with open(output_file, 'w', encoding='utf-8') as file:
+        file.writelines(translated_lines)
+

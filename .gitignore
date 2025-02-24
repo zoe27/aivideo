@@ -13,3 +13,9 @@ __pycache__/
 
 .idea/
 /ai_flow/Translation/m2m100-local/
+
+# 忽略mp3文件
+*.mp3
+
+# 忽略srt文件
+*.srt
