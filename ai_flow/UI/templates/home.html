@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+<h1>Welcome to the Home Page</h1>
+<p>This is a simple web UI using FastAPI.</p>
+<input type="text" id="urlInput" placeholder="Enter URL">
+<button onclick="sendRequest()">Send Request</button>
+
+<h2>Real-Time Data:</h2>
+<div id="real-time-data" style="border: 1px solid black; padding: 10px; width: 300px; margin-top: 20px; display: none;">
+    <!-- This will show real-time data from WebSocket -->
+    Waiting for data...
+</div>
+
+<div id="progress-container" style="width: 100%; background-color: #f3f3f3;">
+    <div id="progress-bar" style="width: 0%; height: 30px; background-color: #4caf50;"></div>
+</div>
+
+<script>
+    // Function to send URL to the server using POST request
+    async function sendRequest() {
+        const url = document.getElementById('urlInput').value;
+        const response = await fetch('/process_url', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url: url })
+        });
+        const result = await response.json();
+        console.log(result);
+
+        setupProgressWebSocket();  // Setup WebSocket for progress updates
+
+
+        // Show the real-time data div
+        document.getElementById('real-time-data').style.display = 'block';
+
+        // Establish WebSocket connection
+        setupRealTimeWebSocket();
+    }
+</script>
+
+<script>
+function setupProgressWebSocket() {
+    // WebSocket connection for progress updates
+    const progressWs = new WebSocket("ws://127.0.0.1:8000/ws/progress");
+
+    progressWs.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        console.log("Progress update: ", data.progress);
+        // Update the progress bar or other UI elements with the progress data
+        document.getElementById("progress-bar").style.width = data.progress + "%";
+    };
+
+    progressWs.onopen = function() {
+        console.log("Progress WebSocket connection established.");
+    };
+
+    progressWs.onerror = function(error) {
+        console.error("Progress WebSocket error: ", error);
+    };
+
+    progressWs.onclose = function() {
+        console.log("Progress WebSocket connection closed.");
+    };
+}
+
+function setupRealTimeWebSocket() {
+    const ws = new WebSocket("ws://127.0.0.1:8000/ws");
+
+    // Handle incoming messages from the WebSocket server
+    ws.onmessage = function(event) {
+        console.log("Message from server: ", event.data);
+        // Update the page with the real-time data
+        const realTimeDataDiv = document.getElementById("real-time-data");
+        realTimeDataDiv.innerHTML = event.data;  // Display the real-time data in the div
+    };
+
+    // Handle WebSocket open event
+    ws.onopen = function() {
+        console.log("WebSocket connection established.");
+    };
+
+    // Handle WebSocket error event
+    ws.onerror = function(error) {
+        console.error("WebSocket error: ", error);
+    };
+
+    // Handle WebSocket close event
+    ws.onclose = function() {
+        console.log("WebSocket connection closed.");
+    };
+}
+</script>
+</body>
+</html>

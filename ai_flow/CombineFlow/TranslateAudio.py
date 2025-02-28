@@ -69,8 +69,10 @@ async def generate_translated_audio(audio_file_path, srt_output_path, translated
 if __name__ == "__main__":
     audio_file_path = "path/to/audio/file"
     srt_output_path = "path/to/output/srt"
-    translated_srt_output_path = "path/to/translated/output/srt"
+    translated_srt_output_path = "translated_output.srt"
     translated_audio_output_path = "path/to/translated/output/audio"
 
-    asyncio.run(generate_translated_srt(audio_file_path, srt_output_path, translated_srt_output_path))
-    asyncio.run(generate_translated_audio(audio_file_path, srt_output_path, translated_audio_output_path))
+    # asyncio.run(generate_translated_srt(audio_file_path, srt_output_path, translated_srt_output_path))
+    # asyncio.run(generate_translated_audio(audio_file_path, srt_output_path, translated_audio_output_path))
+
+    asyncio.run(process_subtitles(pysrt.open(translated_srt_output_path)))
