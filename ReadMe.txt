@@ -1,3 +1,9 @@
+python 版本 3.10
+
+安装ffmpeg
+命令：brew install ffmpeg
+
+
 创建虚拟环境目录
 source .venv/bin/activate 激活虚拟环境
 使用pip3 install -r requirements.txt 安装依赖

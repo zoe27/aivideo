@@ -16,7 +16,8 @@ def download(link, save_path, key):
             'format': 'bestaudio/best',
             'outtmpl': os.path.join(save_path, f'{key}.mp3'),
             'noplaylist': True,  # S'assure de ne pas traiter les playlists
-            'cookiefile': '/Users/apple/Documents/pythonPro/aivideo/ai_flow/VideoFetch/cookies.txt'
+            'cookiefile': '/Users/zoe/Documents/AI/aivideo/ai_flow/VideoFetch/cookietools/cookies.txt'
+            # 'cookies_from_browser': ('chrome',)
         }
 
         with YoutubeDL(ydl_opts) as ydl:
@@ -49,5 +50,5 @@ def validator_url(url):
 
     return True
 
-if __name__ == '__main__':
-    title = download("https://www.youtube.com/watch?v=3M1QBzdpu4Y&list=PLmJkIjmo8j6SetIJSQIbwWqkrCXpA7MfV", "file", "key")
+# if __name__ == '__main__':
+#     title = download("https://www.youtube.com/watch?v=3M1QBzdpu4Y&list=PLmJkIjmo8j6SetIJSQIbwWqkrCXpA7MfV", "file", "key")

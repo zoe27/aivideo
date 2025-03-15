@@ -7,7 +7,9 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import json
 
+from ai_flow.CombineFlow.TranslateAudio import generate_translated_audio, generate_translated_srt
 from ai_flow.Text2Voice.EdgeTTS_srt import process_subtitles, notify_other_function
+from ai_flow.VideoFetch.video_fetch import download
 
 app = FastAPI()
 
@@ -33,9 +35,18 @@ async def process_url(request: Request):
     data = await request.json()
     url = data.get("url")
     # Process the URL as needed
-    translated_srt_output_path = "../CombineFlow/translated_output.srt"
+    # For example, download a video from the URL
+    key = str(hash(url))
+    print(f"download URL: {url}")
+    await asyncio.to_thread(download, url, "file", key)
+
+    await asyncio.create_task(
+        generate_translated_srt("file/" + key + ".mp3", "file/srt_output.srt", "file/translated_audio.mp3"))
+
+    # and extract the audio
+    # translated_srt_output_path = "../CombineFlow/translated_output.srt"
     # await process_subtitles(pysrt.open(translated_srt_output_path))
-    asyncio.create_task(process_subtitles(pysrt.open(translated_srt_output_path)))
+    # asyncio.create_task(process_subtitles(pysrt.open(translated_srt_output_path)))
     return JSONResponse(content={"message": f"URL received: {url}"})
 
 # WebSocket endpoint for real-time updates

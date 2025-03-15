@@ -24,6 +24,9 @@
 <script>
     // Function to send URL to the server using POST request
     async function sendRequest() {
+
+        setupProgressWebSocket();  // Setup WebSocket for progress updates
+
         const url = document.getElementById('urlInput').value;
         const response = await fetch('/process_url', {
             method: 'POST',
@@ -35,7 +38,7 @@
         const result = await response.json();
         console.log(result);
 
-        setupProgressWebSocket();  // Setup WebSocket for progress updates
+
 
 
         // Show the real-time data div
